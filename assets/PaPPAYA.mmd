@@ -1,0 +1,42 @@
+%%metro title: PaPAYA
+%%metro style: dark
+%%metro line_order: span
+%%metro line: main | Phylogeny | #2db572
+%%metro line: spur | SNP Analysis | #0570b0
+%%metro file: gff3_in | GFF3
+%%metro file: reference_in | FASTA/GBK
+%%metro file: snippy_in | FASTQ/FASTA
+
+graph LR
+    subgraph assign_ref [Assign Nearest Reference]
+        mash_reference([Mash Reference])
+        mash_dist([Mash Dist])
+        nearest_ref([Nearest Ref])
+
+		reference_in -->|spur| mash_reference
+        mash_reference -->|spur| mash_dist
+        mash_dist -->|spur| nearest_ref
+    end
+    
+    subgraph call_snps [SNP Analysis]
+    	snippy([Snippy])
+        snippy_core([Snippy Core])
+        snp_dists([Snp Dists])
+        snpeff([Snpeff])
+    	
+        snippy_in -->|spur| snippy
+        snippy -->|spur| snippy_core
+        snippy_core -->|spur| snp_dists
+        snippy_core -->|spur| snpeff
+    end
+    subgraph phylogeny [Phylogeny]
+        panaroo([Panaroo])
+        snp_sites([Snp Sites])
+        iqtree([Iqtree])
+
+		gff3_in -->|main| panaroo
+        panaroo -->|main| snp_sites
+        snp_sites -->|main| iqtree
+    end
+    
+    nearest_ref -->|spur| snippy
