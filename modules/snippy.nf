@@ -33,7 +33,7 @@ process SNIPPY {
 process SNIPPY_CORE {
     // https://github.com/tseemann/snippy
     tag "${refName}"
-    scratch true
+    // scratch true
 
     container "quay.io/staphb/snippy:4.6.0-SC2"
 

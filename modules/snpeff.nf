@@ -11,7 +11,7 @@ process SNPEFF {
     tuple val(refName), path(vcf)
 
     output:
-    path("${refName}.ann.vcf"), emit: vcf
+    tuple val(refName), path("${refName}.ann.vcf"), emit: vcf
     path("${refName}.snpEff.html"), emit: html
     tuple val('snpeff'), eval("snpEff -version | cut -f 2 -d '\t'"), topic: versions
 
@@ -37,6 +37,9 @@ process SNPEFF {
         \$database \\
         -stats ${refName}.snpEff.html \\
         -dataDir \${PWD}/snpeff_cache \\
+        -no-downstream \\
+        -no-upstream \\
+        -no-utr \\
         ${refName}_updated.vcf \\
         > ${refName}.ann.vcf
     """

@@ -8,6 +8,7 @@ include { SNIPPY
           SNIPPY_CORE } from '../modules/snippy.nf'
 include { SNP_DISTS } from '../modules/snp_dists.nf'
 include { SNPEFF } from '../modules/snpeff.nf'
+include { SNPSIFT } from '../modules/snpsift.nf'
 
 workflow SNP_ANALYSIS {
 
@@ -34,11 +35,13 @@ workflow SNP_ANALYSIS {
 
     snippy_core_ch = SNIPPY.out.snippy_out_ch
         .groupTuple(by: 2)
-        .map { dirs, refs, refName -> tuple(dirs, refs[0], refName) }
+        .map { snp_dir, refs, refName -> tuple(snp_dir, refs[0], refName) }
 
     SNIPPY_CORE(snippy_core_ch)
     
     SNP_DISTS(SNIPPY_CORE.out.aln)
     SNPEFF(SNIPPY_CORE.out.vcf)
+
+    SNPSIFT(SNPEFF.out.vcf)
 
 }
